@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".presentation.ui.fragment.authentication.LoginFragment">
+
+    <ImageView
+        android:id="@+id/logo_iv"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="24dp"
+        android:src="@drawable/image_dicoding"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.1" />
+
+    <TextView
+        android:id="@+id/login_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/login"
+        android:textColor="@color/black"
+        android:textSize="32sp"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="@id/logo_iv"
+        app:layout_constraintTop_toBottomOf="@id/logo_iv" />
+
+    <com.example.intermediatesubmission.presentation.ui.custom_view.CustomEditText
+        android:id="@+id/ed_login_email"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="40dp"
+        android:background="@drawable/auth_edit_text_bg"
+        android:drawableStart="@drawable/ic_at"
+        android:drawablePadding="10dp"
+        android:hint="@string/input_email"
+        android:inputType="textEmailAddress"
+        android:minHeight="60dp"
+        android:paddingHorizontal="10dp"
+        app:layout_constraintBottom_toTopOf="@id/ed_login_password"
+        app:layout_constraintEnd_toEndOf="@id/logo_iv"
+        app:layout_constraintStart_toStartOf="@id/logo_iv"
+        app:layout_constraintTop_toBottomOf="@id/login_tv" />
+
+    <com.example.intermediatesubmission.presentation.ui.custom_view.CustomEditText
+        android:id="@+id/ed_login_password"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        android:background="@drawable/auth_edit_text_bg"
+        android:drawableStart="@drawable/ic_lock"
+        android:drawablePadding="10dp"
+        android:hint="@string/input_password"
+        android:inputType="textPassword"
+        android:minHeight="60dp"
+        android:paddingHorizontal="10dp"
+        app:layout_constraintEnd_toEndOf="@id/ed_login_email"
+        app:layout_constraintStart_toStartOf="@id/ed_login_email"
+        app:layout_constraintTop_toBottomOf="@id/ed_login_email" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/sign_in_btn"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"
+        android:minHeight="60dp"
+        android:text="Sign In"
+        app:cornerRadius="100dp"
+        app:layout_constraintBottom_toTopOf="@id/sign_up_tv"
+        app:layout_constraintEnd_toEndOf="@id/ed_login_password"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@id/ed_login_password"
+        app:layout_constraintTop_toBottomOf="@id/ed_login_password" />
+
+    <TextView
+        android:id="@+id/sign_up_tv"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:minWidth="100dp"
+        android:textAlignment="center"
+        tools:text="Not registered yet? Create an Account"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/sign_in_btn" />
+
+    <ProgressBar
+        android:id="@+id/progress_ind"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
