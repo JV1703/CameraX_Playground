@@ -30,22 +30,75 @@ class StoryListFragment : BaseStoryFragment() {
     private lateinit var menuHost: MenuHost
     private lateinit var storyListAdapter: StoryPagingAdapter
 
+    private var refresh: Boolean = true
+
     override fun onResume() {
-        storyListAdapter.refresh()
+        Log.i("StoryListFragment", "onResume")
+        Log.i("StoryListFragment", "refresh - onResume: $refresh")
+//        storyListAdapter.refresh()
+        refreshData()
         super.onResume()
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        Log.i("StoryListFragment", "onCreate")
+        super.onCreate(savedInstanceState)
+    }
+
+    override fun onViewStateRestored(savedInstanceState: Bundle?) {
+        Log.i("StoryListFragment", "onViewStateRestored")
+        refresh = false
+        Log.i("StoryListFragment", "refresh - onViewStateRestored: $refresh")
+        super.onViewStateRestored(savedInstanceState)
+    }
+
+    override fun onStart() {
+        Log.i("StoryListFragment", "onStart")
+        super.onStart()
+    }
+
+    override fun onPause() {
+        Log.i("StoryListFragment", "onPause")
+        super.onPause()
+    }
+
+    override fun onStop() {
+        Log.i("StoryListFragment", "onStop")
+        super.onStop()
+    }
+
+    override fun onDestroyView() {
+        Log.i("StoryListFragment", "onDestroyView")
+//        refresh = true
+//        Log.i("StoryListFragment", "refresh - onDestroyView: $refresh")
+        super.onDestroyView()
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        Log.i("StoryListFragment", "onSaveInstance")
+        refresh = true
+        Log.i("StoryListFragment", "refresh - onSaveInstance: $refresh")
+        super.onSaveInstanceState(outState)
     }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View {
+        Log.i("StoryListFragment", "onCreateView")
         _binding = FragmentStoryListBinding.inflate(inflater, container, false)
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        Log.i("StoryListFragment", "onViewCreated")
         setupMenu()
         setupAdapter()
+
+        Log.i(
+            "storyListFragment",
+            "lifecycle: ${lifecycle.currentState.isAtLeast(Lifecycle.State.RESUMED)}"
+        )
 
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
@@ -96,8 +149,16 @@ class StoryListFragment : BaseStoryFragment() {
     }
 
     override fun onDestroy() {
+        Log.i("StoryListFragment", "onDestroy")
         _binding = null
         super.onDestroy()
+    }
+
+    private fun refreshData() {
+        if (refresh) {
+            storyListAdapter.refresh()
+            refresh = true
+        }
     }
 
     private fun setupAdapter() {
@@ -106,6 +167,7 @@ class StoryListFragment : BaseStoryFragment() {
             storyListAdapter.withLoadStateHeaderAndFooter(header = StoryLoadStateAdapter { storyListAdapter.retry() },
                 footer = StoryLoadStateAdapter { storyListAdapter.retry() })
         binding.storyRv.setHasFixedSize(true)
+        binding.storyRv.itemAnimator = null
     }
 
     private fun setupMenu() {
