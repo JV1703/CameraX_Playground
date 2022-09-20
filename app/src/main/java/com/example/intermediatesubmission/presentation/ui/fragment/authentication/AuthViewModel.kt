@@ -70,7 +70,8 @@ class AuthViewModel @Inject constructor(
                 } catch (e: HttpException) {
                     Log.e("AuthViewModel", "HTTPException - unexpected response")
                 } catch (e: Exception) {
-                    _registerResponse.value = NetworkResult.Error(e.message ?: "unexpected error")
+                    _registerResponse.value =
+                        NetworkResult.Error(e.localizedMessage ?: "unexpected error")
                 }
             } else {
                 _loginResponse.value =

@@ -51,9 +51,7 @@ class AddStoryFragment : BaseUploadFragment() {
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View {
         _binding = FragmentAddStoryBinding.inflate(
-            inflater,
-            container,
-            false
+            inflater, container, false
         )
         return binding.root
     }
@@ -165,10 +163,6 @@ class AddStoryFragment : BaseUploadFragment() {
         } else {
             binding.progressInd.visibility = View.GONE
         }
-    }
-
-    private fun isEditTextEmpty(): Boolean {
-        return binding.edAddDescription.text.isNullOrEmpty()
     }
 
     private fun uploadFile(file: File, text: String) {

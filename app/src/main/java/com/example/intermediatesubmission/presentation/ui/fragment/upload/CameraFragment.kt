@@ -89,7 +89,7 @@ class CameraFragment : BaseUploadFragment() {
                 cameraProvider.unbindAll()
                 bindPreview(cameraProvider)
             } catch (e: Exception) {
-                Log.e("CameraFragment", "cameraX - error message: ${e.message}")
+                Log.e("CameraFragment", "cameraX - error message: ${e.localizedMessage}")
                 makeToast(getString(R.string.camera))
             }
 
@@ -126,7 +126,6 @@ class CameraFragment : BaseUploadFragment() {
                 }
 
                 override fun onImageSaved(output: ImageCapture.OutputFileResults) {
-//                    viewModel.saveFileToVm(photoFile)
                     viewModel.savePicture(photoFile)
                     val action = CameraFragmentDirections.actionCameraFragmentToAddStoryFragment()
                     findNavController().navigate(action)

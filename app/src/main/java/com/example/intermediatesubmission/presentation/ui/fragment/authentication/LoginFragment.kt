@@ -31,8 +31,7 @@ class LoginFragment : BaseAuthFragment() {
     private val binding get() = _binding!!
 
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
+        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View {
         Log.e("trace", "loginFragment - onCreateView: Started")
         _binding = FragmentLoginBinding.inflate(inflater, container, false)
@@ -78,10 +77,7 @@ class LoginFragment : BaseAuthFragment() {
     }
 
     private fun setSpannable(
-        textView: TextView,
-        initialMsg: String,
-        highlightString: String,
-        @ColorRes color: Int
+        textView: TextView, initialMsg: String, highlightString: String, @ColorRes color: Int
     ) {
 
         val clickableSpan = object : ClickableSpan() {
@@ -102,22 +98,10 @@ class LoginFragment : BaseAuthFragment() {
 
         val startIndex = fullText.indexOf(highlightString)
         val endIndex = startIndex + highlightString.length
-        Log.i(
-            "test",
-            "startIndex: $startIndex, endIndex: $endIndex, string: ${
-                fullText.substring(
-                    startIndex,
-                    endIndex
-                )
-            }"
-        )
 
         SpannableString(fullText).apply {
             setSpan(
-                clickableSpan,
-                startIndex,
-                startIndex + highlightString.length,
-                Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
+                clickableSpan, startIndex, endIndex, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
             )
             textView.text = this
         }

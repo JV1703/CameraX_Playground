@@ -38,14 +38,6 @@ class UploadViewModel @Inject constructor(
     private var _description: String = ""
     val description get() = _description
 
-    fun savePicture(file: File?) {
-        _picture = file
-    }
-
-    fun saveDescription(description: String) {
-        _description = description
-    }
-
     private var _cameraSelector = CameraSelector.DEFAULT_BACK_CAMERA
     val cameraSelector get() = _cameraSelector
 
@@ -53,6 +45,14 @@ class UploadViewModel @Inject constructor(
         _cameraSelector =
             if (_cameraSelector == CameraSelector.DEFAULT_BACK_CAMERA) CameraSelector.DEFAULT_FRONT_CAMERA
             else CameraSelector.DEFAULT_BACK_CAMERA
+    }
+
+    fun savePicture(file: File?) {
+        _picture = file
+    }
+
+    fun saveDescription(description: String) {
+        _description = description
     }
 
     fun uploadFile(
@@ -76,7 +76,8 @@ class UploadViewModel @Inject constructor(
             } catch (e: HttpException) {
                 Log.e("AuthViewModel", "HTTPException - unexpected response")
             } catch (e: Exception) {
-                _uploadResponse.value = NetworkResult.Error(e.message ?: "unexpected error")
+                _uploadResponse.value =
+                    NetworkResult.Error(e.localizedMessage ?: "unexpected error")
             }
         }
     }

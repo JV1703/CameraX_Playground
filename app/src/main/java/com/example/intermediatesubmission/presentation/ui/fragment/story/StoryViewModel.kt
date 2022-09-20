@@ -8,7 +8,6 @@ import androidx.lifecycle.viewModelScope
 import androidx.paging.ExperimentalPagingApi
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
-import com.example.MyApplication
 import com.example.intermediatesubmission.data.local.entity.EntityStory
 import com.example.intermediatesubmission.data.repository.StoryRepository
 import com.example.intermediatesubmission.presentation.ui.adapters.story.StoryRemoteMediator
@@ -18,7 +17,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class StoryViewModel @Inject constructor(
-    private val storyRepository: StoryRepository, private val application: MyApplication
+    private val storyRepository: StoryRepository
 ) : ViewModel() {
 
     @OptIn(ExperimentalPagingApi::class)
@@ -38,7 +37,7 @@ class StoryViewModel @Inject constructor(
             try {
                 storyRepository.removeAuthTokenFromPreferencesStore()
             } catch (e: Exception) {
-                Log.e("StoryViewModel", "logout() - ${e.message}")
+                Log.e("StoryViewModel", "logout() - ${e.localizedMessage}")
             }
         }
     }

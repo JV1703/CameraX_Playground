@@ -21,16 +21,6 @@ import javax.inject.Singleton
 @InstallIn(SingletonComponent::class)
 class NetworkModule {
 
-//    class HeaderInterceptor : Interceptor {
-//        override fun intercept(chain: Interceptor.Chain): Response {
-//            val token = ""
-//            val newRequest = chain.request().newBuilder()
-//                .addHeader("Authorization", "Bearer $token")
-//                .build()
-//            return chain.proceed(newRequest)
-//        }
-//    }
-
     @Provides
     @Singleton
     fun loggingInterceptor(): HttpLoggingInterceptor {

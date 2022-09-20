@@ -30,57 +30,19 @@ class StoryListFragment : BaseStoryFragment() {
     private lateinit var menuHost: MenuHost
     private lateinit var storyListAdapter: StoryPagingAdapter
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        Log.i("storyListFragment", "onCreate - is called")
-        super.onCreate(savedInstanceState)
-    }
-
-    override fun onStart() {
-        Log.i("storyListFragment", "onStart - is called")
-        super.onStart()
-    }
-
     override fun onResume() {
         storyListAdapter.refresh()
         super.onResume()
-        Log.i("storyListFragment", "onResume - is called")
-    }
-
-    override fun onViewStateRestored(savedInstanceState: Bundle?) {
-        Log.i("storyListFragment", "onViewStateRestored - is called")
-        super.onViewStateRestored(savedInstanceState)
-    }
-
-    override fun onPause() {
-        Log.i("storyListFragment", "onPause - is called")
-        super.onPause()
-    }
-
-    override fun onStop() {
-        Log.i("storyListFragment", "onStop - is called")
-        super.onStop()
-    }
-
-    override fun onSaveInstanceState(outState: Bundle) {
-        Log.i("storyListFragment", "onSaveInstanceState - is called")
-        super.onSaveInstanceState(outState)
-    }
-
-    override fun onDestroyView() {
-        Log.i("storyListFragment", "onDestroyView - is called")
-        super.onDestroyView()
     }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View {
-        Log.i("storyListFragment", "onCreateView - is called")
         _binding = FragmentStoryListBinding.inflate(inflater, container, false)
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        Log.i("storyListFragment", "onViewCreated - is called")
         super.onViewCreated(view, savedInstanceState)
         setupMenu()
         setupAdapter()
@@ -134,7 +96,6 @@ class StoryListFragment : BaseStoryFragment() {
     }
 
     override fun onDestroy() {
-        Log.i("storyListFragment", "onDestroy - is called")
         _binding = null
         super.onDestroy()
     }
@@ -144,7 +105,6 @@ class StoryListFragment : BaseStoryFragment() {
         binding.storyRv.adapter =
             storyListAdapter.withLoadStateHeaderAndFooter(header = StoryLoadStateAdapter { storyListAdapter.retry() },
                 footer = StoryLoadStateAdapter { storyListAdapter.retry() })
-        Log.i("adapter", "storyList: ${storyListAdapter}")
         binding.storyRv.setHasFixedSize(true)
     }
 
