@@ -14,6 +14,7 @@ import androidx.paging.ExperimentalPagingApi
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import com.example.MyApplication
+import com.example.intermediatesubmission.R
 import com.example.intermediatesubmission.common.NetworkResult
 import com.example.intermediatesubmission.common.networkResultHandler
 import com.example.intermediatesubmission.common.reduceFileImage
@@ -37,11 +38,18 @@ class StoryViewModel @Inject constructor(
     private val storyRepository: StoryRepository, private val application: MyApplication
 ) : ViewModel() {
 
-    private val _file = MutableLiveData</*ImageHelper*/File>()
-    val file: LiveData</*ImageHelper*/File> get() = _file
+    private val _file = MutableLiveData<File>()
+    val file: LiveData<File> get() = _file
 
     private val _uploadResponse = MutableLiveData<NetworkResult<FileUploadResponse>>()
     val uploadResponse: LiveData<NetworkResult<FileUploadResponse>> get() = _uploadResponse
+
+    private val _refresh = MutableLiveData<Boolean>()
+    val refresh: LiveData<Boolean> get() = _refresh
+
+    fun setRefresh(refresh: Boolean) {
+        _refresh.value = refresh
+    }
 
     private var _cameraSelector = CameraSelector.DEFAULT_BACK_CAMERA
     val cameraSelector get() = _cameraSelector
@@ -119,7 +127,7 @@ class StoryViewModel @Inject constructor(
                 }
             }
         } else {
-            _uploadResponse.value = NetworkResult.Error("No Internet Connection")
+            _uploadResponse.value = NetworkResult.Error(application.resources.getString(R.string.no_internet))
         }
     }
 

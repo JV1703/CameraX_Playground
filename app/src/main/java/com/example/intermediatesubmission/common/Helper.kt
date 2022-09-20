@@ -4,10 +4,14 @@ import android.app.Activity
 import android.app.Application
 import android.content.ContentResolver
 import android.content.Context
+import android.content.res.Configuration
+import android.content.res.Resources
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.net.Uri
+import android.os.Build
 import android.os.Environment
+import android.util.Log
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import com.example.intermediatesubmission.R

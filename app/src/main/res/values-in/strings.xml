@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Intermediate Submission</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello fragment kosong</string>
+    <string name="cta_register1">Belum punya akun?</string>
+    <string name="cta_register2">Daftar sekarang</string>
+    <string name="login">Masuk</string>
+    <string name="input_email">Email</string>
+    <string name="input_username">Username</string>
+    <string name="input_password">Sandi</string>
+    <string name="email_error">Alamat email tidak valid</string>
+    <string name="username_error">Username tidak valid</string>
+    <string name="password_error">Kata sandi harus minimal 6 karakter</string>
+    <string name="empty_field_error">Tidak boleh kosong</string>
+    <string name="lorem_ipsum">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc cursus lorem diam. Vestibulum sed dolor vel libero commodo luctus vel eget lacus. Phasellus tempus felis tortor, sit amet ultrices tortor vulputate vitae. Integer molestie velit vehicula maximus mattis. Quisque eu erat nisi. Phasellus et dui non arcu ornare congue sed nec eros. Nam egestas risus vel diam venenatis, nec gravida odio ultrices. Proin enim elit, fringilla sed purus sed, aliquet accumsan nisl. Proin suscipit condimentum justo, ut interdum elit pharetra ac. Proin bibendum eros vel mauris facilisis accumsan in in ligula. Integer nec rhoncus odio, ac vulputate odio. Aenean erat massa, eleifend at dictum sit amet, tincidunt vitae lacus.</string>
+    <string name="retry">Coba lagi</string>
+    <string name="no_result">"Tidak ada data 😓</string>
+    <string name="camera">Camera</string>
+    <string name="submit">Unggah</string>
+    <string name="description">Deskripsi</string>
+    <string name="empty_text">NO DATA</string>
+    <string name="permission_camera">Diperlukan izin kamera untuk mengambil foto</string>
+    <string name="close">Tutup</string>
+    <string name="choose_picture">Pilih Gambar</string>
+    <string name="insert_picture">Masukkan gambar</string>
+    <string name="empty_description">Tidak ada deskripsi</string>
+    <string name="no_internet">Tidak terhubung ke internet</string>
+    <string name="check_email">Silakan periksa kolom email Anda</string>
+    <string name="check_password">Silakan periksa kolom sandi Anda</string>
+    <string name="check_username">Silakan periksa kolom username Anda</string>
+    <string name="sign_in">Masuk</string>
+    <string name="register">Daftar</string>
+    <string name="sign_up">Daftar</string>
+    <string name="fail_picture">Gagal mengambil photo</string>
+    <string name="fail_camera">Gagal meluncurkan kamera</string>
+    <string name="appwidget_text">EXAMPLE</string>
+    <string name="add_widget">Add widget</string>
+    <string name="app_widget_description">This is an app widget description</string>
+    <string name="gallery">Galeri</string>
+    <string name="story_list">Daftar Cerita</string>
+    <string name="story">Cerita</string>
+    <string name="add_story">Tambah Cerita</string>
+    <string name="authentication">Autentikasi</string>
+    <string name="fail_refresh">Tidak dapat refresh, pastikan koneksi tersedia</string>
+    <string name="register_success">Anda terdaftar</string>
+</resources>

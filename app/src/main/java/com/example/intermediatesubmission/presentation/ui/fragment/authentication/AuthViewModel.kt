@@ -7,6 +7,7 @@ import android.os.Build
 import android.util.Log
 import androidx.lifecycle.*
 import com.example.MyApplication
+import com.example.intermediatesubmission.R
 import com.example.intermediatesubmission.common.NetworkResult
 import com.example.intermediatesubmission.common.networkResultHandler
 import com.example.intermediatesubmission.data.network.model.login.LoginResponse
@@ -46,11 +47,11 @@ class AuthViewModel @Inject constructor(
                 } catch (e: HttpException) {
                     Log.e("AuthViewModel", "HTTPException - unexpected response")
                 } catch (e: Exception) {
-                    _registerResponse.value = NetworkResult.Error(e.message ?: "unexpected error")
+                    _registerResponse.value = NetworkResult.Error(e.localizedMessage ?: "unexpected error")
                 }
             }
         } else {
-            _registerResponse.value = NetworkResult.Error("No Internet Connection")
+            _registerResponse.value = NetworkResult.Error(application.getString(R.string.no_internet))
         }
     }
 
@@ -73,7 +74,7 @@ class AuthViewModel @Inject constructor(
                     _registerResponse.value = NetworkResult.Error(e.message ?: "unexpected error")
                 }
             } else {
-                _loginResponse.value = NetworkResult.Error("No Internet Connection")
+                _loginResponse.value = NetworkResult.Error(application.getString(R.string.no_internet))
             }
         }
     }

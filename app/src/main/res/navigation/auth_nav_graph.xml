@@ -17,9 +17,6 @@
             app:exitAnim="@anim/slide_out_left"
             app:popEnterAnim="@anim/slide_in_left"
             app:popExitAnim="@anim/slide_out_right" />
-        <action
-            android:id="@+id/action_loginFragment_to_storyActivity"
-            app:destination="@id/storyActivity" />
     </fragment>
     <fragment
         android:id="@+id/registerFragment"
@@ -27,12 +24,13 @@
         android:label="fragment_register"
         tools:layout="@layout/fragment_register" >
         <action
-            android:id="@+id/action_registerFragment_to_storyActivity"
-            app:destination="@id/storyActivity" />
+            android:id="@+id/action_registerFragment_to_loginFragment"
+            app:destination="@id/loginFragment"
+            app:enterAnim="@anim/slide_in_left"
+            app:exitAnim="@anim/slide_out_right"
+            app:popEnterAnim="@anim/slide_in_right"
+            app:popExitAnim="@anim/slide_out_left"
+            app:popUpTo="@id/loginFragment"
+            app:popUpToInclusive="true" />
     </fragment>
-    <activity
-        android:id="@+id/storyActivity"
-        android:name="com.example.intermediatesubmission.presentation.ui.activity.StoryActivity"
-        android:label="activity_story"
-        tools:layout="@layout/activity_story" />
 </navigation>

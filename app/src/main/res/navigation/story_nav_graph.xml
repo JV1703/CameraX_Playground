@@ -8,7 +8,7 @@
     <fragment
         android:id="@+id/storyListFragment"
         android:name="com.example.intermediatesubmission.presentation.ui.fragment.story.StoryListFragment"
-        android:label="Story List"
+        android:label="@string/story_list"
         tools:layout="@layout/fragment_story_list" >
         <action
             android:id="@+id/action_storyListFragment_to_storyViewPagerFragment"
@@ -29,7 +29,7 @@
     <fragment
         android:id="@+id/storyViewPagerFragment"
         android:name="com.example.intermediatesubmission.presentation.ui.fragment.story.StoryViewPagerFragment"
-        android:label="Story"
+        android:label="@string/story"
         tools:layout="@layout/fragment_story_view_pager" >
         <argument
             android:name="position"
@@ -38,7 +38,7 @@
     <fragment
         android:id="@+id/addStoryFragment"
         android:name="com.example.intermediatesubmission.presentation.ui.fragment.story.AddStoryFragment"
-        android:label="Add Story"
+        android:label="@string/add_story"
         tools:layout="@layout/fragment_add_story" >
         <action
             android:id="@+id/action_addStoryFragment_to_cameraFragment"
@@ -52,7 +52,7 @@
     <fragment
         android:id="@+id/cameraFragment"
         android:name="com.example.intermediatesubmission.presentation.ui.fragment.story.CameraFragment"
-        android:label="Camera"
+        android:label="@string/camera"
         tools:layout="@layout/fragment_camera" >
         <action
             android:id="@+id/action_cameraFragment_to_addStoryFragment"
@@ -63,6 +63,6 @@
     <activity
         android:id="@+id/authActivity"
         android:name="com.example.intermediatesubmission.presentation.ui.activity.AuthActivity"
-        android:label="Authentication"
+        android:label="@string/authentication"
         tools:layout="@layout/activity_auth" />
 </navigation>

@@ -5,8 +5,9 @@ import android.app.AlertDialog
 import android.content.DialogInterface
 import android.content.Intent
 import android.content.pm.PackageManager
-import android.graphics.drawable.BitmapDrawable
+import android.content.res.Resources
 import android.net.Uri
+import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -14,15 +15,14 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.ViewGroup.LayoutParams.WRAP_CONTENT
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.core.view.updateLayoutParams
 import androidx.navigation.fragment.findNavController
 import coil.load
 import com.example.intermediatesubmission.R
-import com.example.intermediatesubmission.common.NetworkResult
-import com.example.intermediatesubmission.common.makeToast
-import com.example.intermediatesubmission.common.uriToFile
+import com.example.intermediatesubmission.common.*
 import com.example.intermediatesubmission.databinding.FragmentAddStoryBinding
 import com.google.android.material.snackbar.Snackbar
 import java.io.File
@@ -68,9 +68,9 @@ class AddStoryFragment : BaseStoryFragment() {
 
         binding.buttonAdd.setOnClickListener {
             if (picture == null) {
-                makeToast("please insert picture")
+                makeToast(getString(R.string.insert_picture))
             } else if (isEditTextEmpty()) {
-                makeToast("There is no description")
+                makeToast(getString(R.string.empty_description))
             } else {
                 uploadFile(picture!!, binding.edAddDescription.text.toString())
             }
@@ -86,6 +86,7 @@ class AddStoryFragment : BaseStoryFragment() {
                     isLoading(false)
                     val action =
                         AddStoryFragmentDirections.actionAddStoryFragmentToStoryListFragment()
+                    viewModel.setRefresh(true)
                     findNavController().navigate(action)
                 }
 
@@ -109,9 +110,9 @@ class AddStoryFragment : BaseStoryFragment() {
             } else {
                 Snackbar.make(
                     binding.root,
-                    "Camera permission is required to take photo",
+                    getString(R.string.permission_camera),
                     Snackbar.LENGTH_SHORT
-                ).setAction("Close") {}.show()
+                ).setAction(getString(R.string.close)) {}.show()
             }
         }
 
@@ -129,7 +130,7 @@ class AddStoryFragment : BaseStoryFragment() {
         val intent = Intent()
         intent.action = Intent.ACTION_GET_CONTENT
         intent.type = "image/*"
-        val chooser = Intent.createChooser(intent, "Choose a Picture")
+        val chooser = Intent.createChooser(intent, getString(R.string.choose_picture))
         launcherIntentGallery.launch(chooser)
     }
 
@@ -145,24 +146,7 @@ class AddStoryFragment : BaseStoryFragment() {
         }
     }
 
-    private fun isImageViewEmpty(): Boolean {
-        val imageView = binding.previewImageView
-        val drawable = imageView.drawable
-        var hasImage = drawable != null
-        val test = imageView.drawable != ContextCompat.getDrawable(
-            requireContext(),
-            R.drawable.ic_error_placeholder
-        )
-
-        if (hasImage && drawable is BitmapDrawable && test) {
-            hasImage = drawable.bitmap != null
-        }
-        Log.i("isEmpty", "drawable: $drawable, test: ${test}, hasImage: $hasImage")
-        return hasImage
-    }
-
     private fun isEditTextEmpty(): Boolean {
-        Log.i("isEmpty", "editText: ${binding.edAddDescription.text.isNullOrEmpty()}")
         return binding.edAddDescription.text.isNullOrEmpty()
     }
 
@@ -178,8 +162,9 @@ class AddStoryFragment : BaseStoryFragment() {
             }
 
             shouldShowRequestPermissionRationale(Manifest.permission.CAMERA) -> {
-                AlertDialog.Builder(requireContext()).setTitle("Camera permission required")
-                    .setMessage("Camera permission is required to capture photo")
+                AlertDialog.Builder(requireContext())
+                    .setTitle(getString(R.string.permission_camera))
+                    .setMessage(getString(R.string.permission_camera))
                     .setPositiveButton("OK") { _, _ ->
                         requestPermission.launch(
                             Manifest.permission.CAMERA

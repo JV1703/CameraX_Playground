@@ -9,17 +9,15 @@ import androidx.camera.core.ImageCaptureException
 import androidx.camera.core.Preview
 import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.core.content.ContextCompat
-import androidx.core.net.toUri
 import androidx.lifecycle.LifecycleOwner
 import androidx.navigation.fragment.findNavController
+import com.example.intermediatesubmission.R
 import com.example.intermediatesubmission.common.createFile
 import com.example.intermediatesubmission.common.makeToast
 import com.example.intermediatesubmission.databinding.FragmentCameraBinding
 import com.google.common.util.concurrent.ListenableFuture
 
 class CameraFragment : BaseStoryFragment() {
-
-//    private var cameraSelector = CameraSelector.DEFAULT_BACK_CAMERA
 
     private var _binding: FragmentCameraBinding? = null
     private val binding get() = _binding!!
@@ -56,9 +54,6 @@ class CameraFragment : BaseStoryFragment() {
     }
 
     private fun selectCameraLens() {
-//        cameraSelector =
-//            if (cameraSelector == CameraSelector.DEFAULT_BACK_CAMERA) CameraSelector.DEFAULT_FRONT_CAMERA
-//            else CameraSelector.DEFAULT_BACK_CAMERA
         viewModel.setCamera()
         startCameraX()
     }
@@ -92,7 +87,8 @@ class CameraFragment : BaseStoryFragment() {
                 cameraProvider.unbindAll()
                 bindPreview(cameraProvider)
             } catch (e: Exception) {
-                makeToast("Fail to launch camera - $e")
+                Log.e("CameraFragment", "cameraX - error message: ${e.message}")
+                makeToast(getString(R.string.camera))
             }
 
         }, ContextCompat.getMainExecutor(requireContext()))
@@ -120,15 +116,15 @@ class CameraFragment : BaseStoryFragment() {
             ContextCompat.getMainExecutor(requireContext()),
             object : ImageCapture.OnImageSavedCallback {
                 override fun onError(exc: ImageCaptureException) {
-                    makeToast("Fail to take picture")
+                    makeToast(getString(R.string.fail_picture))
                     Log.e(
-                        "cameraX", "error code: ${exc.imageCaptureError}, error msg: ${exc.message}"
+                        "CameraFragment",
+                        "cameraX - error code: ${exc.imageCaptureError}, error msg: ${exc.localizedMessage}"
                     )
                 }
 
                 override fun onImageSaved(output: ImageCapture.OutputFileResults) {
                     viewModel.saveFileToVm(photoFile)
-                    Log.i("file", "path: ${photoFile.path.toUri()}")
                     val action = CameraFragmentDirections.actionCameraFragmentToAddStoryFragment()
                     findNavController().navigate(action)
                 }

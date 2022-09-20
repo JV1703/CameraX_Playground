@@ -1,4 +1,4 @@
-package com.example.intermediatesubmission.presentation.ui.model
+package com.example.intermediatesubmission.data.model
 
 import android.os.Parcelable
 import kotlinx.parcelize.Parcelize

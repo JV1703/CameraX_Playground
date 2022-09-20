@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.navigation.fragment.findNavController
+import com.example.intermediatesubmission.R
 import com.example.intermediatesubmission.common.NetworkResult
 import com.example.intermediatesubmission.common.makeToast
 import com.example.intermediatesubmission.databinding.FragmentRegisterBinding
@@ -43,9 +44,13 @@ class RegisterFragment : BaseAuthFragment() {
                 }
                 is NetworkResult.Success -> {
                     isLoading(false)
-                    val action = RegisterFragmentDirections.actionRegisterFragmentToStoryActivity()
+                    login(
+                        binding.edRegisterEmail.text.toString(),
+                        binding.edRegisterPassword.text.toString()
+                    )
+                    makeToast(getString(R.string.register_success))
+                    val action = RegisterFragmentDirections.actionRegisterFragmentToLoginFragment()
                     findNavController().navigate(action)
-                    activity?.finish()
                 }
 
                 is NetworkResult.Error -> {
@@ -54,7 +59,6 @@ class RegisterFragment : BaseAuthFragment() {
                 }
             }
         }
-
     }
 
     override fun onDestroy() {
@@ -74,11 +78,11 @@ class RegisterFragment : BaseAuthFragment() {
 
     private fun validator(email: String, username: String, password: String) {
         if (email.isEmpty() || !Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
-            makeToast("please check your email field")
+            makeToast(getString(R.string.check_email))
         } else if (username.isEmpty()) {
-            makeToast("please check your username field")
+            makeToast(getString(R.string.check_username))
         } else if (password.isEmpty() || password.length < 5) {
-            makeToast("please check your password field")
+            makeToast(getString(R.string.check_email))
         } else {
             registerUser(username, email, password)
         }
@@ -86,6 +90,10 @@ class RegisterFragment : BaseAuthFragment() {
 
     private fun registerUser(name: String, email: String, password: String) {
         viewModel.registerUser(name, email, password)
+    }
+
+    private fun login(email: String, password: String) {
+        viewModel.login(email, password)
     }
 
 }

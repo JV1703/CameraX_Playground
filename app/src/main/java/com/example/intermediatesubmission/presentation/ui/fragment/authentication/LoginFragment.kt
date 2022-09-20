@@ -1,5 +1,6 @@
 package com.example.intermediatesubmission.presentation.ui.fragment.authentication
 
+import android.content.Intent
 import android.os.Bundle
 import android.text.SpannableString
 import android.text.Spanned
@@ -11,12 +12,15 @@ import android.util.Patterns
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.TextView
+import androidx.annotation.ColorRes
 import androidx.core.content.ContextCompat
 import androidx.navigation.fragment.findNavController
 import com.example.intermediatesubmission.R
 import com.example.intermediatesubmission.common.NetworkResult
 import com.example.intermediatesubmission.common.makeToast
 import com.example.intermediatesubmission.databinding.FragmentLoginBinding
+import com.example.intermediatesubmission.presentation.ui.activity.StoryActivity
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -30,14 +34,7 @@ class LoginFragment : BaseAuthFragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        viewModel.authToken.observe(viewLifecycleOwner) { authToken ->
-            Log.i("auth", "token: $authToken")
-            if (authToken.isNotEmpty()) {
-                val action = LoginFragmentDirections.actionLoginFragmentToStoryActivity()
-                findNavController().navigate(action)
-                activity?.finish()
-            }
-        }
+        Log.e("trace","loginFragment - onCreateView: Started")
         _binding = FragmentLoginBinding.inflate(inflater, container, false)
         return binding.root
     }
@@ -45,13 +42,16 @@ class LoginFragment : BaseAuthFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        setupStringNavigation("Not registered yet? Create an Account", 20, 37)
+        setSpannable(
+            binding.signUpTv,
+            getString(R.string.cta_register1),
+            getString(R.string.cta_register2),
+            R.color.teal_200
+        )
 
         binding.signInBtn.setOnClickListener {
             validator(binding.edLoginEmail.text.toString(), binding.edLoginPassword.text.toString())
         }
-
-
 
         viewModel.loginResponse.observe(viewLifecycleOwner) { networkResult ->
             when (networkResult) {
@@ -60,8 +60,9 @@ class LoginFragment : BaseAuthFragment() {
                 }
                 is NetworkResult.Success -> {
                     isLoading(false)
-                    val action = LoginFragmentDirections.actionLoginFragmentToStoryActivity()
-                    findNavController().navigate(action)
+                    val intent = Intent(requireContext(), StoryActivity::class.java)
+                    startActivity(intent)
+                    activity?.finish()
                 }
                 is NetworkResult.Error -> {
                     isLoading(false)
@@ -76,7 +77,13 @@ class LoginFragment : BaseAuthFragment() {
         super.onDestroy()
     }
 
-    private fun setupStringNavigation(hyperlink: String, start: Int, end: Int) {
+    private fun setSpannable(
+        textView: TextView,
+        initialMsg: String,
+        highlightString: String,
+        @ColorRes color: Int
+    ) {
+
         val clickableSpan = object : ClickableSpan() {
             override fun onClick(p0: View) {
                 val action = LoginFragmentDirections.actionLoginFragmentToRegisterFragment()
@@ -85,15 +92,37 @@ class LoginFragment : BaseAuthFragment() {
 
             override fun updateDrawState(ds: TextPaint) {
                 super.updateDrawState(ds)
-                ds.color = ContextCompat.getColor(requireContext(), R.color.teal_200)
+                ds.color = ContextCompat.getColor(requireContext(), color)
                 ds.isUnderlineText = true
             }
         }
-        SpannableString(hyperlink).apply {
-            setSpan(clickableSpan, start, end, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
-            binding.signUpTv.text = this
+
+        val fullText = "$initialMsg $highlightString"
+        textView.text = fullText
+
+        val startIndex = fullText.indexOf(highlightString)
+        val endIndex = startIndex + highlightString.length
+        Log.i(
+            "test",
+            "startIndex: $startIndex, endIndex: $endIndex, string: ${
+                fullText.substring(
+                    startIndex,
+                    endIndex
+                )
+            }"
+        )
+
+        SpannableString(fullText).apply {
+            setSpan(
+                clickableSpan,
+                startIndex,
+                startIndex + highlightString.length,
+                Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
+            )
+            textView.text = this
         }
-        binding.signUpTv.movementMethod = LinkMovementMethod.getInstance()
+
+        textView.movementMethod = LinkMovementMethod.getInstance()
     }
 
     private fun login(email: String, password: String) {
@@ -102,13 +131,12 @@ class LoginFragment : BaseAuthFragment() {
 
     private fun validator(email: String, password: String) {
         if (email.isEmpty() || !Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
-            makeToast("please check your email field")
+            makeToast(getString(R.string.check_email))
         } else if (password.isEmpty() || password.length < 5) {
-            makeToast("please check your password field")
+            makeToast(getString(R.string.check_password))
         } else {
             login(email, password)
         }
-        Log.i("login_fragment", "email: $email, password: $password")
     }
 
     private fun isLoading(isLoading: Boolean) {

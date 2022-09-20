@@ -22,8 +22,21 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.IntermediateSubmission"
         tools:targetApi="31">
+        <activity
+            android:name=".presentation.ui.activity.SplashActivity"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+            <meta-data
+                android:name="android.app.lib_name"
+                android:value="" />
+        </activity>
+
         <receiver
-            android:name=".AppWidget"
+            android:name=".presentation.ui.widget.AppWidget"
             android:exported="false">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
@@ -36,16 +49,12 @@
 
         <activity
             android:name=".presentation.ui.activity.StoryActivity"
-            android:exported="true"></activity>
+            android:exported="true"
+            android:screenOrientation="locked" />
         <activity
             android:name=".presentation.ui.activity.AuthActivity"
-            android:exported="true">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
+            android:exported="true"
+            android:screenOrientation="locked"/>
 
         <provider
             android:name="androidx.core.content.FileProvider"

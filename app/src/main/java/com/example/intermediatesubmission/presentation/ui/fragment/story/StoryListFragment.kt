@@ -40,7 +40,7 @@ class StoryListFragment : BaseStoryFragment() {
     }
 
     override fun onResume() {
-        storyListAdapter.refresh()
+//        storyListAdapter.refresh()
         super.onResume()
         Log.i("storyListFragment", "onResume - is called")
     }
@@ -85,6 +85,13 @@ class StoryListFragment : BaseStoryFragment() {
         setupMenu()
         setupAdapter()
 
+        viewModel.refresh.observe(viewLifecycleOwner) {
+            if (it) {
+                storyListAdapter.refresh()
+                viewModel.setRefresh(false)
+            }
+        }
+
         viewLifecycleOwner.lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.stories.collectLatest { pagingData ->
@@ -95,7 +102,7 @@ class StoryListFragment : BaseStoryFragment() {
 
         viewLifecycleOwner.lifecycleScope.launch {
             storyListAdapter.loadStateFlow.collect { loadState ->
-                Log.i("mediator", "loadState: ${loadState}")
+                Log.i("mediator", "loadState: $loadState")
                 binding.refresh.setOnRefreshListener {
                     if (viewModel.hasInternetConnection()) {
                         storyListAdapter.refresh()
@@ -103,7 +110,7 @@ class StoryListFragment : BaseStoryFragment() {
                         binding.refresh.isRefreshing = false
                     } else {
                         binding.refresh.isRefreshing = false
-                        makeToast("unable to refresh, please make sure connection is available")
+                        makeToast(getString(R.string.fail_refresh))
                     }
                 }
 
@@ -111,7 +118,7 @@ class StoryListFragment : BaseStoryFragment() {
                     loadState.refresh is LoadState.NotLoading && storyListAdapter.itemCount == 0
 
                 binding.errorMsg.isVisible = isListEmpty
-                binding.errorMsg.text = requireContext().getString(R.string.no_result)
+                binding.errorMsg.text = getString(R.string.no_result)
                 binding.storyRv.isVisible = !isListEmpty
 
                 binding.progressInd.isVisible = loadState.source.refresh is LoadState.Loading
@@ -121,7 +128,7 @@ class StoryListFragment : BaseStoryFragment() {
                     ?: loadState.source.prepend as? LoadState.Error
                     ?: loadState.append as? LoadState.Error ?: loadState.prepend as? LoadState.Error
                 errorState?.let {
-                    makeToast("\uD83D\uDE28 Wooops ${it.error}")
+                    makeToast("\uD83D\uDE28 Wooops ${it.error.localizedMessage}")
                 }
 
             }

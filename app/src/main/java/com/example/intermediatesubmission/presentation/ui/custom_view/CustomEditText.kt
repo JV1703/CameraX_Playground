@@ -28,7 +28,6 @@ class CustomEditText(context: Context, attrs: AttributeSet) : AppCompatEditText(
 
     override fun onDraw(canvas: Canvas?) {
         super.onDraw(canvas)
-//        validator(500L)
     }
 
     private fun isFieldEmpty(isEmpty: Boolean) {
@@ -77,7 +76,7 @@ class CustomEditText(context: Context, attrs: AttributeSet) : AppCompatEditText(
                 }
             }
         } else {
-            onFocusChangeListener = OnFocusChangeListener { view, hasFocus ->
+            onFocusChangeListener = OnFocusChangeListener { _, hasFocus ->
                 if (!hasFocus) {
                     isFieldEmpty(text.toString().isEmpty())
                 }

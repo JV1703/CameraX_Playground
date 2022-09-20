@@ -1,6 +1,7 @@
 package com.example.intermediatesubmission.common.di.app
 
 import com.example.intermediatesubmission.common.Constants.BASE_URL
+import com.example.intermediatesubmission.data.network.CacheInterceptor
 import com.example.intermediatesubmission.data.network.HeaderInterceptor
 import com.example.intermediatesubmission.data.network.model.DicodingApiService
 import com.squareup.moshi.Moshi
@@ -38,12 +39,18 @@ class NetworkModule {
 
     @Provides
     @Singleton
+    fun provideCacheInterceptor(): CacheInterceptor = CacheInterceptor()
+
+    @Provides
+    @Singleton
     fun okHttpClient(
         loggingInterceptor: HttpLoggingInterceptor,
-        headerInterceptor: HeaderInterceptor
+        headerInterceptor: HeaderInterceptor,
+        cacheInterceptor: CacheInterceptor
     ) = OkHttpClient.Builder()
         .addInterceptor(loggingInterceptor)
         .addInterceptor(headerInterceptor)
+        .addInterceptor(cacheInterceptor)
         .readTimeout(15, TimeUnit.SECONDS)
         .connectTimeout(15, TimeUnit.SECONDS)
         .build()

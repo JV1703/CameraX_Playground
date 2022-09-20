@@ -2,7 +2,7 @@ package com.example.intermediatesubmission.data.local.entity
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import com.example.intermediatesubmission.presentation.ui.model.Story
+import com.example.intermediatesubmission.data.model.Story
 
 @Entity(tableName = "story_table")
 data class EntityStory(

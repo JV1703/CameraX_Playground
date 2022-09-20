@@ -29,10 +29,6 @@ class AppModule {
     fun provideApplication(@ApplicationContext app: Context): MyApplication =
         (app as MyApplication)
 
-//    @Provides
-//    @Singleton
-//    fun provideDataStore(@ApplicationContext appContext: Context): AppDataStore = AppDataStore(appContext)
-
     @Provides
     @Singleton
     fun providePreferencesDataStore(@ApplicationContext appContext: Context): DataStore<Preferences> {
