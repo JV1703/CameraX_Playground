@@ -23,7 +23,7 @@
     <string name="permission_camera">Diperlukan izin kamera untuk mengambil foto</string>
     <string name="close">Tutup</string>
     <string name="choose_picture">Pilih Gambar</string>
-    <string name="insert_picture">Masukkan gambar</string>
+    <string name="empty_picture">Masukkan gambar</string>
     <string name="empty_description">Tidak ada deskripsi</string>
     <string name="no_internet">Tidak terhubung ke internet</string>
     <string name="check_email">Silakan periksa kolom email Anda</string>
@@ -34,7 +34,7 @@
     <string name="sign_up">Daftar</string>
     <string name="fail_picture">Gagal mengambil photo</string>
     <string name="fail_camera">Gagal meluncurkan kamera</string>
-    <string name="appwidget_text">EXAMPLE</string>
+    <string name="appwidget_text">Daftar Cerita</string>
     <string name="add_widget">Add widget</string>
     <string name="app_widget_description">This is an app widget description</string>
     <string name="gallery">Galeri</string>
@@ -44,4 +44,5 @@
     <string name="authentication">Autentikasi</string>
     <string name="fail_refresh">Tidak dapat refresh, pastikan koneksi tersedia</string>
     <string name="register_success">Anda terdaftar</string>
+    <string name="title_activity_upload">Unggah</string>
 </resources>

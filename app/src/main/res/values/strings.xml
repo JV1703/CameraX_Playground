@@ -23,7 +23,7 @@
     <string name="permission_camera">Camera permission is required to take photo</string>
     <string name="close">Close</string>
     <string name="choose_picture">Choose a picture</string>
-    <string name="insert_picture">Please insert picture</string>
+    <string name="empty_picture">Please insert picture</string>
     <string name="empty_description">There is no description</string>
     <string name="no_internet">No internet connection</string>
     <string name="check_email">Please check your email field</string>
@@ -35,12 +35,14 @@
     <string name="fail_picture">Fail to take picture</string>
     <string name="fail_camera">Fail to launch camera</string>
     <string name="fail_refresh">Unable to refresh, please make sure connection is available</string>
-    <string name="appwidget_text">EXAMPLE</string>
-    <string name="add_widget">Add widget</string>
-    <string name="app_widget_description">This is an app widget description</string>
     <string name="gallery">Gallery</string>
     <string name="story_list">Story List</string>
     <string name="story">Story</string>
     <string name="add_story">Add Story</string>
     <string name="authentication">Authentication</string>
+    <string name="add_widget">Add widget</string>
+    <string name="appwidget_text">Story List</string>
+    <string name="app_widget_description">This is an app widget description</string>
+    <string name="title_activity_upload">UploadActivity</string>
+    <!-- Strings used for fragments for navigation -->
 </resources>

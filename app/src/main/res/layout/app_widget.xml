@@ -44,4 +44,5 @@
         android:textSize="20sp"
         android:textStyle="bold"
         android:visibility="gone" />
+
 </FrameLayout>

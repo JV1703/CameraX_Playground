@@ -4,16 +4,18 @@ import android.app.Activity
 import android.app.Application
 import android.content.ContentResolver
 import android.content.Context
-import android.content.res.Configuration
-import android.content.res.Resources
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
+import android.net.ConnectivityManager
+import android.net.NetworkCapabilities
 import android.net.Uri
 import android.os.Build
 import android.os.Environment
-import android.util.Log
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.Observer
 import com.example.intermediatesubmission.R
 import com.google.android.material.timepicker.TimeFormat
 import java.io.*
@@ -94,4 +96,41 @@ fun reduceFileImage(file: File): File {
     } while (streamLength > 1000000)
     bitmap.compress(Bitmap.CompressFormat.JPEG, compressQuality, FileOutputStream(file))
     return file
+}
+
+fun <T> LiveData<T>.observeOnce(lifecycleOwner: LifecycleOwner, observer: Observer<T>) {
+    observe(lifecycleOwner, object : Observer<T> {
+        override fun onChanged(t: T?) {
+            removeObserver(this)
+            observer.onChanged(t)
+        }
+    })
+}
+
+fun hasInternetConnection(context: Context): Boolean {
+    val connectivityManager = context.getSystemService(
+        Context.CONNECTIVITY_SERVICE
+    ) as ConnectivityManager
+
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+        val activeNetwork = connectivityManager.activeNetwork ?: return false
+        val capabilities =
+            connectivityManager.getNetworkCapabilities(activeNetwork) ?: return false
+        return when {
+            capabilities.hasTransport(NetworkCapabilities.TRANSPORT_WIFI) -> true
+            capabilities.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR) -> true
+            capabilities.hasTransport(NetworkCapabilities.TRANSPORT_ETHERNET) -> true
+            else -> false
+        }
+    } else {
+        connectivityManager.activeNetworkInfo?.run {
+            return when (type) {
+                ConnectivityManager.TYPE_WIFI -> true
+                ConnectivityManager.TYPE_MOBILE -> true
+                ConnectivityManager.TYPE_ETHERNET -> true
+                else -> false
+            }
+        }
+    }
+    return false
 }

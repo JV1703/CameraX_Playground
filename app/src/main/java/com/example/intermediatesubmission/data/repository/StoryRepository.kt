@@ -6,6 +6,7 @@ import com.example.intermediatesubmission.data.data_source.DicodingRemoteDataSou
 import com.example.intermediatesubmission.data.local.entity.EntityStory
 import com.example.intermediatesubmission.data.local.entity.EntityStoryRemoteKey
 import com.example.intermediatesubmission.data.network.model.stories.StoriesResponse
+import kotlinx.coroutines.flow.Flow
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import retrofit2.Response
@@ -46,5 +47,7 @@ class StoryRepository @Inject constructor(
     suspend fun removeAuthTokenFromPreferencesStore() {
         local.removeAuthTokenFromPreferencesStore()
     }
+
+    fun getAllStoriesFromDb(): Flow<List<EntityStory>> = local.getAllStoriesFromDb()
 
 }

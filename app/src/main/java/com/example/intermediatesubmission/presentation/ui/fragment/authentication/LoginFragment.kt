@@ -34,7 +34,7 @@ class LoginFragment : BaseAuthFragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        Log.e("trace","loginFragment - onCreateView: Started")
+        Log.e("trace", "loginFragment - onCreateView: Started")
         _binding = FragmentLoginBinding.inflate(inflater, container, false)
         return binding.root
     }

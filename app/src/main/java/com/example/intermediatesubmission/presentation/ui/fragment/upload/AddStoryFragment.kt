@@ -1,33 +1,35 @@
-package com.example.intermediatesubmission.presentation.ui.fragment.story
+package com.example.intermediatesubmission.presentation.ui.fragment.upload
 
 import android.Manifest
 import android.app.AlertDialog
 import android.content.DialogInterface
 import android.content.Intent
 import android.content.pm.PackageManager
-import android.content.res.Resources
 import android.net.Uri
-import android.os.Build
 import android.os.Bundle
-import android.util.Log
+import android.transition.TransitionInflater
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.ViewGroup.LayoutParams.WRAP_CONTENT
+import android.widget.TextView
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
-import androidx.core.view.updateLayoutParams
+import androidx.navigation.fragment.FragmentNavigatorExtras
 import androidx.navigation.fragment.findNavController
 import coil.load
 import com.example.intermediatesubmission.R
-import com.example.intermediatesubmission.common.*
+import com.example.intermediatesubmission.common.NetworkResult
+import com.example.intermediatesubmission.common.hasInternetConnection
+import com.example.intermediatesubmission.common.makeToast
+import com.example.intermediatesubmission.common.uriToFile
 import com.example.intermediatesubmission.databinding.FragmentAddStoryBinding
 import com.google.android.material.snackbar.Snackbar
+import dagger.hilt.android.AndroidEntryPoint
 import java.io.File
 
-class AddStoryFragment : BaseStoryFragment() {
+@AndroidEntryPoint
+class AddStoryFragment : BaseUploadFragment() {
 
     companion object {
         private val REQUIRED_CAMERA_PERMISSIONS = arrayOf(Manifest.permission.CAMERA)
@@ -36,17 +38,31 @@ class AddStoryFragment : BaseStoryFragment() {
     private var _binding: FragmentAddStoryBinding? = null
     private val binding get() = _binding!!
 
-    private var picture: File? = null
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        val animation = TransitionInflater.from(requireContext()).inflateTransition(
+            android.R.transition.move
+        )
+
+        sharedElementEnterTransition = animation
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View {
-        _binding = FragmentAddStoryBinding.inflate(inflater, container, false)
+        _binding = FragmentAddStoryBinding.inflate(
+            inflater,
+            container,
+            false
+        )
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        binding.edAddDescription.setText(viewModel.description, TextView.BufferType.EDITABLE)
+        loadPicture(viewModel.picture)
 
         binding.cameraBtn.setOnClickListener {
             requestPermission()
@@ -56,23 +72,17 @@ class AddStoryFragment : BaseStoryFragment() {
             startGallery()
         }
 
-        viewModel.file.observe(viewLifecycleOwner) { file ->
-
-            picture = file
-
-            binding.previewImageView.load(file)
-            binding.previewImageView.updateLayoutParams { width = WRAP_CONTENT }
-            binding.previewImageView.updateLayoutParams { height = WRAP_CONTENT }
-
-        }
-
         binding.buttonAdd.setOnClickListener {
-            if (picture == null) {
-                makeToast(getString(R.string.insert_picture))
-            } else if (isEditTextEmpty()) {
-                makeToast(getString(R.string.empty_description))
+            if (hasInternetConnection(requireContext())) {
+                if (viewModel.picture == null) {
+                    makeToast(getString(R.string.empty_picture))
+                } else if (it == null) {
+                    makeToast(getString(R.string.empty_description))
+                } else {
+                    uploadFile(viewModel.picture!!, binding.edAddDescription.text.toString())
+                }
             } else {
-                uploadFile(picture!!, binding.edAddDescription.text.toString())
+                makeToast(getString(R.string.no_internet))
             }
         }
 
@@ -84,22 +94,29 @@ class AddStoryFragment : BaseStoryFragment() {
 
                 is NetworkResult.Success -> {
                     isLoading(false)
-                    val action =
-                        AddStoryFragmentDirections.actionAddStoryFragmentToStoryListFragment()
-                    viewModel.setRefresh(true)
-                    findNavController().navigate(action)
+                    activity?.finish()
                 }
 
                 is NetworkResult.Error -> {
+                    isLoading(false)
                     makeToast(networkResult.message ?: "unexpected error")
                 }
             }
         }
     }
 
+
     override fun onDestroy() {
+        saveDescription(binding.edAddDescription.text.toString())
         _binding = null
         super.onDestroy()
+    }
+
+    private fun saveDescription(description: String) {
+        val trimmedDescription = description.trim()
+        if (trimmedDescription.isNotEmpty()) {
+            viewModel.saveDescription(trimmedDescription)
+        }
     }
 
     private val requestPermission =
@@ -109,9 +126,7 @@ class AddStoryFragment : BaseStoryFragment() {
                 findNavController().navigate(action)
             } else {
                 Snackbar.make(
-                    binding.root,
-                    getString(R.string.permission_camera),
-                    Snackbar.LENGTH_SHORT
+                    binding.root, getString(R.string.permission_camera), Snackbar.LENGTH_SHORT
                 ).setAction(getString(R.string.close)) {}.show()
             }
         }
@@ -122,7 +137,8 @@ class AddStoryFragment : BaseStoryFragment() {
         if (result.resultCode == AppCompatActivity.RESULT_OK) {
             val selectedImg: Uri = result.data?.data as Uri
             val myFile = uriToFile(selectedImg, requireContext())
-            viewModel.saveFileToVm(myFile)
+            viewModel.savePicture(myFile)
+            loadPicture(viewModel.picture)
         }
     }
 
@@ -139,6 +155,11 @@ class AddStoryFragment : BaseStoryFragment() {
     }
 
     private fun isLoading(isLoading: Boolean) {
+
+        binding.buttonAdd.isEnabled = isLoading
+        binding.cameraBtn.isEnabled = isLoading
+        binding.galleryBtn.isEnabled = isLoading
+        binding.previewImageView.isEnabled = isLoading
         if (isLoading) {
             binding.progressInd.visibility = View.VISIBLE
         } else {
@@ -152,6 +173,24 @@ class AddStoryFragment : BaseStoryFragment() {
 
     private fun uploadFile(file: File, text: String) {
         viewModel.uploadFile(file, text)
+    }
+
+    private fun loadPicture(picture: File?) {
+        if (picture != null) {
+            binding.previewImageView.load(picture)
+            binding.previewImageView.isEnabled = true
+            binding.previewImageView.setOnClickListener {
+                val extra = FragmentNavigatorExtras(binding.previewImageView to "image")
+                val action = AddStoryFragmentDirections.actionAddStoryFragmentToPictureFragment()
+                findNavController().navigate(
+                    action.actionId, null, null, extra
+                )
+            }
+
+        } else {
+            binding.previewImageView.load(R.drawable.ic_error_placeholder)
+            binding.previewImageView.isEnabled = false
+        }
     }
 
     private fun requestPermission() {

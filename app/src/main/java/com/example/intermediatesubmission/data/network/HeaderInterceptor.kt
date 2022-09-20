@@ -34,6 +34,7 @@ class CacheInterceptor : Interceptor {
         val cacheControl = CacheControl.Builder()
             .maxAge(15, TimeUnit.MINUTES) // 15 minutes cache
             .build()
-        return original.newBuilder().header("cache-control", cacheControl.toString()).build()
+        return original.newBuilder().removeHeader("cache-control")
+            .header("cache-control", cacheControl.toString()).build()
     }
 }

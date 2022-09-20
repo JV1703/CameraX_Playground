@@ -25,7 +25,6 @@ class StoryActivity : AppCompatActivity() {
         navController = navHostFragment.navController
         setupActionBarWithNavController(navController)
         supportActionBar?.setDisplayHomeAsUpEnabled(false)
-
     }
 
     override fun onSupportNavigateUp(): Boolean {

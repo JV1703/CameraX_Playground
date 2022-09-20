@@ -1,14 +1,11 @@
 package com.example.intermediatesubmission.presentation.ui.fragment.authentication
 
-import android.content.Context
-import android.net.ConnectivityManager
-import android.net.NetworkCapabilities
-import android.os.Build
 import android.util.Log
 import androidx.lifecycle.*
 import com.example.MyApplication
 import com.example.intermediatesubmission.R
 import com.example.intermediatesubmission.common.NetworkResult
+import com.example.intermediatesubmission.common.hasInternetConnection
 import com.example.intermediatesubmission.common.networkResultHandler
 import com.example.intermediatesubmission.data.network.model.login.LoginResponse
 import com.example.intermediatesubmission.data.network.model.register.RegisterResponse
@@ -37,7 +34,7 @@ class AuthViewModel @Inject constructor(
     ) {
         _registerResponse.value = NetworkResult.Loading()
 
-        if (hasInternetConnection()) {
+        if (hasInternetConnection(application)) {
             viewModelScope.launch {
                 try {
                     val response = authRepo.registerUser(name, email, password)
@@ -47,11 +44,13 @@ class AuthViewModel @Inject constructor(
                 } catch (e: HttpException) {
                     Log.e("AuthViewModel", "HTTPException - unexpected response")
                 } catch (e: Exception) {
-                    _registerResponse.value = NetworkResult.Error(e.localizedMessage ?: "unexpected error")
+                    _registerResponse.value =
+                        NetworkResult.Error(e.localizedMessage ?: "unexpected error")
                 }
             }
         } else {
-            _registerResponse.value = NetworkResult.Error(application.getString(R.string.no_internet))
+            _registerResponse.value =
+                NetworkResult.Error(application.getString(R.string.no_internet))
         }
     }
 
@@ -61,7 +60,7 @@ class AuthViewModel @Inject constructor(
         _loginResponse.value = NetworkResult.Loading()
 
         viewModelScope.launch {
-            if (hasInternetConnection()) {
+            if (hasInternetConnection(application)) {
                 try {
                     val response = authRepo.login(email, password)
                     _loginResponse.value = networkResultHandler(response)
@@ -74,37 +73,10 @@ class AuthViewModel @Inject constructor(
                     _registerResponse.value = NetworkResult.Error(e.message ?: "unexpected error")
                 }
             } else {
-                _loginResponse.value = NetworkResult.Error(application.getString(R.string.no_internet))
+                _loginResponse.value =
+                    NetworkResult.Error(application.getString(R.string.no_internet))
             }
         }
-    }
-
-    private fun hasInternetConnection(): Boolean {
-        val connectivityManager = application.getSystemService(
-            Context.CONNECTIVITY_SERVICE
-        ) as ConnectivityManager
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            val activeNetwork = connectivityManager.activeNetwork ?: return false
-            val capabilities =
-                connectivityManager.getNetworkCapabilities(activeNetwork) ?: return false
-            return when {
-                capabilities.hasTransport(NetworkCapabilities.TRANSPORT_WIFI) -> true
-                capabilities.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR) -> true
-                capabilities.hasTransport(NetworkCapabilities.TRANSPORT_ETHERNET) -> true
-                else -> false
-            }
-        } else {
-            connectivityManager.activeNetworkInfo?.run {
-                return when (type) {
-                    ConnectivityManager.TYPE_WIFI -> true
-                    ConnectivityManager.TYPE_MOBILE -> true
-                    ConnectivityManager.TYPE_ETHERNET -> true
-                    else -> false
-                }
-            }
-        }
-        return false
     }
 
 }

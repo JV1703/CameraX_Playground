@@ -70,5 +70,5 @@ class DicodingLocalDataSource @Inject constructor(
     suspend fun clearRemoteKeys() = storyRemoteKeyDao.clearRemoteKeys()
 
     // etc
-    fun getAll(): Flow<List<EntityStory>> = storyDao.getAll()
+    fun getAllStoriesFromDb(): Flow<List<EntityStory>> = storyDao.getAll()
 }

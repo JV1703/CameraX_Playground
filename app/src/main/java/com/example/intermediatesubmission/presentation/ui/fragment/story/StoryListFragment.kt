@@ -12,6 +12,7 @@ import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import androidx.paging.LoadState
 import com.example.intermediatesubmission.R
+import com.example.intermediatesubmission.common.hasInternetConnection
 import com.example.intermediatesubmission.common.makeToast
 import com.example.intermediatesubmission.databinding.FragmentStoryListBinding
 import com.example.intermediatesubmission.presentation.ui.adapters.story.StoryLoadStateAdapter
@@ -40,7 +41,7 @@ class StoryListFragment : BaseStoryFragment() {
     }
 
     override fun onResume() {
-//        storyListAdapter.refresh()
+        storyListAdapter.refresh()
         super.onResume()
         Log.i("storyListFragment", "onResume - is called")
     }
@@ -81,19 +82,11 @@ class StoryListFragment : BaseStoryFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         Log.i("storyListFragment", "onViewCreated - is called")
         super.onViewCreated(view, savedInstanceState)
-
         setupMenu()
         setupAdapter()
 
-        viewModel.refresh.observe(viewLifecycleOwner) {
-            if (it) {
-                storyListAdapter.refresh()
-                viewModel.setRefresh(false)
-            }
-        }
-
         viewLifecycleOwner.lifecycleScope.launch {
-            repeatOnLifecycle(Lifecycle.State.STARTED) {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.stories.collectLatest { pagingData ->
                     storyListAdapter.submitData(pagingData)
                 }
@@ -104,7 +97,7 @@ class StoryListFragment : BaseStoryFragment() {
             storyListAdapter.loadStateFlow.collect { loadState ->
                 Log.i("mediator", "loadState: $loadState")
                 binding.refresh.setOnRefreshListener {
-                    if (viewModel.hasInternetConnection()) {
+                    if (hasInternetConnection(requireContext())) {
                         storyListAdapter.refresh()
                         binding.storyRv.scrollToPosition(0)
                         binding.refresh.isRefreshing = false
@@ -135,7 +128,7 @@ class StoryListFragment : BaseStoryFragment() {
         }
 
         binding.fab.setOnClickListener {
-            val action = StoryListFragmentDirections.actionStoryListFragmentToAddStoryFragment()
+            val action = StoryListFragmentDirections.actionStoryListFragmentToUploadActivity()
             findNavController().navigate(action)
         }
     }
@@ -151,6 +144,7 @@ class StoryListFragment : BaseStoryFragment() {
         binding.storyRv.adapter =
             storyListAdapter.withLoadStateHeaderAndFooter(header = StoryLoadStateAdapter { storyListAdapter.retry() },
                 footer = StoryLoadStateAdapter { storyListAdapter.retry() })
+        Log.i("adapter", "storyList: ${storyListAdapter}")
         binding.storyRv.setHasFixedSize(true)
     }
 

@@ -1,4 +1,4 @@
-package com.example.intermediatesubmission.presentation.ui.fragment.story
+package com.example.intermediatesubmission.presentation.ui.fragment.upload
 
 import android.os.Bundle
 import android.util.Log
@@ -16,8 +16,10 @@ import com.example.intermediatesubmission.common.createFile
 import com.example.intermediatesubmission.common.makeToast
 import com.example.intermediatesubmission.databinding.FragmentCameraBinding
 import com.google.common.util.concurrent.ListenableFuture
+import dagger.hilt.android.AndroidEntryPoint
 
-class CameraFragment : BaseStoryFragment() {
+@AndroidEntryPoint
+class CameraFragment : BaseUploadFragment() {
 
     private var _binding: FragmentCameraBinding? = null
     private val binding get() = _binding!!
@@ -124,7 +126,8 @@ class CameraFragment : BaseStoryFragment() {
                 }
 
                 override fun onImageSaved(output: ImageCapture.OutputFileResults) {
-                    viewModel.saveFileToVm(photoFile)
+//                    viewModel.saveFileToVm(photoFile)
+                    viewModel.savePicture(photoFile)
                     val action = CameraFragmentDirections.actionCameraFragmentToAddStoryFragment()
                     findNavController().navigate(action)
                 }

@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import coil.load
 import com.example.intermediatesubmission.R
+import com.example.intermediatesubmission.common.Constants.CROSS_FADE_DURATION
 import com.example.intermediatesubmission.common.dateFormatter
 import com.example.intermediatesubmission.data.local.entity.EntityStory
 import com.example.intermediatesubmission.databinding.StoryViewHolderBinding
@@ -29,7 +30,7 @@ class StoryPagingAdapter :
 
                 ivItemPhoto.load(currentStory.photoUrl) {
                     placeholder(R.drawable.loading_animation)
-                    crossfade(600)
+                    crossfade(CROSS_FADE_DURATION)
                     error(R.drawable.ic_error_placeholder)
                 }
 

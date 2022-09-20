@@ -3,17 +3,18 @@ package com.example.intermediatesubmission.presentation.ui.adapters.story
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.core.view.ViewCompat
-import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import coil.load
 import com.example.intermediatesubmission.R
+import com.example.intermediatesubmission.common.Constants.CROSS_FADE_DURATION
 import com.example.intermediatesubmission.common.dateFormatter
 import com.example.intermediatesubmission.data.local.entity.EntityStory
 import com.example.intermediatesubmission.databinding.StoryVpVhBinding
 
 class StoryViewPagerAdapter :
-    PagingDataAdapter<EntityStory, StoryViewPagerAdapter.StoryVpVh>(StoryPagingAdapter) {
+    ListAdapter<EntityStory, StoryViewPagerAdapter.StoryVpVh>(StoryPagingAdapter) {
 
     class StoryVpVh(private val binding: StoryVpVhBinding) : RecyclerView.ViewHolder(binding.root) {
         fun bind(currentStory: EntityStory) {
@@ -25,7 +26,7 @@ class StoryViewPagerAdapter :
 
                 storyIv.load(currentStory.photoUrl) {
                     placeholder(R.drawable.loading_animation)
-                    crossfade(600)
+                    crossfade(CROSS_FADE_DURATION)
                     error(R.drawable.ic_error_placeholder)
                 }
 

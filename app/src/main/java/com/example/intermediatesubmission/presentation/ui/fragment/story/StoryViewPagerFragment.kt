@@ -5,18 +5,12 @@ import android.transition.TransitionInflater
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.lifecycleScope
-import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.navArgs
-import androidx.paging.LoadState
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.widget.ViewPager2
 import com.example.intermediatesubmission.databinding.FragmentStoryViewPagerBinding
 import com.example.intermediatesubmission.presentation.ui.adapters.story.StoryViewPagerAdapter
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class StoryViewPagerFragment : BaseStoryFragment() {
@@ -51,29 +45,13 @@ class StoryViewPagerFragment : BaseStoryFragment() {
         postponeEnterTransition()
         setupViewPager()
 
-        binding.scrollView.isFillViewport = true
-
-        viewLifecycleOwner.lifecycleScope.launch {
-            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                viewModel.stories.collectLatest { pagingData ->
-                    storyViewPagerAdapter.submitData(pagingData)
-                }
+        viewModel.storiesDb.observe(viewLifecycleOwner) { stories ->
+            storyViewPagerAdapter.submitList(stories)
+            (view.parent as? ViewGroup)?.viewTreeObserver?.addOnPreDrawListener {
+                startPostponedEnterTransition()
+                true
             }
-        }
-
-        viewLifecycleOwner.lifecycleScope.launch {
-            storyViewPagerAdapter.loadStateFlow.collect { loadState ->
-                val isListEmpty =
-                    loadState.refresh is LoadState.NotLoading && storyViewPagerAdapter.itemCount == 0
-
-                if (!isListEmpty) {
-                    binding.viewPager.setCurrentItem(navArgs.position, false)
-                    (view.parent as? ViewGroup)?.viewTreeObserver?.addOnPreDrawListener {
-                        startPostponedEnterTransition()
-                        true
-                    }
-                }
-            }
+            binding.viewPager.setCurrentItem(navArgs.position, false)
         }
     }
 
@@ -85,7 +63,6 @@ class StoryViewPagerFragment : BaseStoryFragment() {
     private fun setupViewPager() {
         storyViewPagerAdapter = StoryViewPagerAdapter()
         binding.viewPager.adapter = storyViewPagerAdapter
-//        binding.viewPager.reduceViewPagerSensitivity(15)
     }
 
     private fun ViewPager2.reduceViewPagerSensitivity(n: Int) {

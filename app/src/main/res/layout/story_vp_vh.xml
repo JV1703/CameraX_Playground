@@ -1,57 +1,67 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools">
 
-    <ImageView
-        android:id="@+id/story_iv"
+    android:scrollbars="vertical"
+    android:verticalScrollbarPosition="defaultPosition">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:transitionName="story_iv_details"
-        android:adjustViewBounds="true"
-        android:scaleType="centerCrop"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:srcCompat="@tools:sample/backgrounds/scenic" />
+        android:layout_height="match_parent">
 
-    <TextView
-        android:id="@+id/story_author"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:transitionName="story_author_details"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="12dp"
-        android:textColor="@color/black"
-        android:textSize="30sp"
-        android:textStyle="bold"
-        app:layout_constraintStart_toStartOf="@id/story_iv"
-        app:layout_constraintTop_toBottomOf="@id/story_iv"
-        tools:text="John Doe/Jane Doe" />
+        <ImageView
+            android:id="@+id/story_iv"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:adjustViewBounds="true"
+            android:scaleType="centerCrop"
+            android:transitionName="story_iv_details"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:srcCompat="@tools:sample/backgrounds/scenic" />
 
-    <TextView
-        android:id="@+id/story_timestamp"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:transitionName="story_timestamp_details"
-        app:layout_constraintStart_toStartOf="@id/story_author"
-        app:layout_constraintTop_toBottomOf="@id/story_author"
-        tools:text="Sat, 17 September 2022" />
+        <TextView
+            android:id="@+id/story_author"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="12dp"
+            android:textColor="@color/black"
+            android:textSize="30sp"
+            android:textStyle="bold"
+            android:transitionName="story_author_details"
+            app:layout_constraintStart_toStartOf="@id/story_iv"
+            app:layout_constraintTop_toBottomOf="@id/story_iv"
+            tools:text="John Doe/Jane Doe" />
 
-    <TextView
-        android:id="@+id/story_description"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:layout_marginTop="12dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginBottom="8dp"
-        android:textSize="16sp"
-        android:transitionName="story_description_details"
-        android:textColor="@color/black"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="@id/story_timestamp"
-        app:layout_constraintTop_toBottomOf="@id/story_timestamp"
-        tools:text="@string/lorem_ipsum" />
+        <TextView
+            android:id="@+id/story_timestamp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:transitionName="story_timestamp_details"
+            app:layout_constraintStart_toStartOf="@id/story_author"
+            app:layout_constraintTop_toBottomOf="@id/story_author"
+            tools:text="Sat, 17 September 2022" />
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+        <TextView
+            android:id="@+id/story_description"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_marginTop="12dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginBottom="8dp"
+            android:textColor="@color/black"
+            android:textSize="16sp"
+            android:transitionName="story_description_details"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="@id/story_timestamp"
+            app:layout_constraintTop_toBottomOf="@id/story_timestamp"
+            tools:text="@string/lorem_ipsum" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+</ScrollView>

@@ -23,6 +23,16 @@
         android:theme="@style/Theme.IntermediateSubmission"
         tools:targetApi="31">
         <activity
+            android:name=".presentation.ui.activity.UploadActivity"
+            android:exported="false"
+            android:label="@string/title_activity_upload"
+            android:screenOrientation="locked"
+            android:theme="@style/Theme.IntermediateSubmission.NoActionBar">
+            <meta-data
+                android:name="android.app.lib_name"
+                android:value="" />
+        </activity>
+        <activity
             android:name=".presentation.ui.activity.SplashActivity"
             android:exported="true">
             <intent-filter>
@@ -30,6 +40,7 @@
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />
@@ -47,6 +58,10 @@
                 android:resource="@xml/app_widget_info" />
         </receiver>
 
+        <service
+            android:name="com.example.intermediatesubmission.presentation.ui.widget.StackWidgetService"
+            android:permission="android.permission.BIND_REMOTEVIEWS" />
+
         <activity
             android:name=".presentation.ui.activity.StoryActivity"
             android:exported="true"
@@ -54,7 +69,7 @@
         <activity
             android:name=".presentation.ui.activity.AuthActivity"
             android:exported="true"
-            android:screenOrientation="locked"/>
+            android:screenOrientation="locked" />
 
         <provider
             android:name="androidx.core.content.FileProvider"
