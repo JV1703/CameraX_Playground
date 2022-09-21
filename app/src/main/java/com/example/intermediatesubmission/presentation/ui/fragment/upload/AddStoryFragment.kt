@@ -159,10 +159,10 @@ class AddStoryFragment : BaseUploadFragment() {
 
     private fun isLoading(isLoading: Boolean) {
 
-        binding.buttonAdd.isEnabled = isLoading
-        binding.cameraBtn.isEnabled = isLoading
-        binding.galleryBtn.isEnabled = isLoading
-        binding.previewImageView.isEnabled = isLoading
+        binding.buttonAdd.isEnabled = !isLoading
+        binding.cameraBtn.isEnabled = !isLoading
+        binding.galleryBtn.isEnabled = !isLoading
+        binding.previewImageView.isEnabled = !isLoading
         if (isLoading) {
             binding.progressInd.visibility = View.VISIBLE
         } else {
