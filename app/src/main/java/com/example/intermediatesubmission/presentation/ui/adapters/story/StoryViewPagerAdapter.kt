@@ -3,8 +3,8 @@ package com.example.intermediatesubmission.presentation.ui.adapters.story
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.core.view.ViewCompat
+import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
-import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import coil.load
 import com.example.intermediatesubmission.R
@@ -14,7 +14,7 @@ import com.example.intermediatesubmission.data.local.entity.EntityStory
 import com.example.intermediatesubmission.databinding.StoryVpVhBinding
 
 class StoryViewPagerAdapter :
-    ListAdapter<EntityStory, StoryViewPagerAdapter.StoryVpVh>(StoryPagingAdapter) {
+    PagingDataAdapter<EntityStory, StoryViewPagerAdapter.StoryVpVh>(StoryPagingAdapter) {
 
     class StoryVpVh(private val binding: StoryVpVhBinding) : RecyclerView.ViewHolder(binding.root) {
         fun bind(currentStory: EntityStory) {

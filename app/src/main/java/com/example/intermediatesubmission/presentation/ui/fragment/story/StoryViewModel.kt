@@ -1,14 +1,8 @@
 package com.example.intermediatesubmission.presentation.ui.fragment.story
 
 import android.util.Log
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.asLiveData
-import androidx.lifecycle.viewModelScope
-import androidx.paging.ExperimentalPagingApi
-import androidx.paging.Pager
-import androidx.paging.PagingConfig
-import com.example.intermediatesubmission.data.local.entity.EntityStory
+import androidx.lifecycle.*
+import androidx.paging.*
 import com.example.intermediatesubmission.data.repository.StoryRepository
 import com.example.intermediatesubmission.presentation.ui.adapters.story.StoryRemoteMediator
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -26,11 +20,15 @@ class StoryViewModel @Inject constructor(
         remoteMediator = StoryRemoteMediator(storyRepository),
     ) {
         storyRepository.getAllStories()
-    }.flow
+    }.liveData.cachedIn(viewModelScope)
     val stories get() = _stories
 
-    private val _storiesDb = storyRepository.getAllStoriesFromDb().asLiveData()
-    val storiesDb: LiveData<List<EntityStory>> get() = _storiesDb
+    private val _page = MutableLiveData<Int>()
+    val page: LiveData<Int> get() = _page
+
+    fun savePage(page: Int) {
+        _page.value = page
+    }
 
     fun logout() {
         viewModelScope.launch {

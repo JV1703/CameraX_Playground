@@ -12,9 +12,7 @@
         tools:layout="@layout/fragment_story_list" >
         <action
             android:id="@+id/action_storyListFragment_to_storyViewPagerFragment"
-            app:destination="@id/storyViewPagerFragment"
-            app:popEnterAnim="@anim/slide_in_left"
-            app:popExitAnim="@android:anim/slide_out_right" />
+            app:destination="@id/storyViewPagerFragment" />
         <action
             android:id="@+id/action_storyListFragment_to_authActivity"
             app:destination="@id/authActivity" />

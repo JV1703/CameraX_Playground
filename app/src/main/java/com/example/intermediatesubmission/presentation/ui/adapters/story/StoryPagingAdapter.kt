@@ -89,6 +89,5 @@ class StoryPagingAdapter :
         override fun areContentsTheSame(oldItem: EntityStory, newItem: EntityStory): Boolean {
             return oldItem == newItem
         }
-
     }
 }

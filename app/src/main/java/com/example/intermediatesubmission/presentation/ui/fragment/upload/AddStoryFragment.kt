@@ -24,6 +24,7 @@ import com.example.intermediatesubmission.common.hasInternetConnection
 import com.example.intermediatesubmission.common.makeToast
 import com.example.intermediatesubmission.common.uriToFile
 import com.example.intermediatesubmission.databinding.FragmentAddStoryBinding
+import com.example.intermediatesubmission.presentation.ui.activity.StoryActivity
 import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
 import java.io.File
@@ -74,7 +75,7 @@ class AddStoryFragment : BaseUploadFragment() {
             if (hasInternetConnection(requireContext())) {
                 if (viewModel.picture == null) {
                     makeToast(getString(R.string.empty_picture))
-                } else if (it == null) {
+                } else if (binding.edAddDescription.text.toString().isEmpty()) {
                     makeToast(getString(R.string.empty_description))
                 } else {
                     uploadFile(viewModel.picture!!, binding.edAddDescription.text.toString())
@@ -92,6 +93,10 @@ class AddStoryFragment : BaseUploadFragment() {
 
                 is NetworkResult.Success -> {
                     isLoading(false)
+                    val intent = Intent(requireContext(), StoryActivity::class.java)
+                    intent.putExtra("scrollToTop", true)
+                    intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
+                    startActivity(intent)
                     activity?.finish()
                 }
 

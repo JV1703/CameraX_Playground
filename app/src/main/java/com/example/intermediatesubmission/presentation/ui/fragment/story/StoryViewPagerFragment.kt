@@ -2,15 +2,18 @@ package com.example.intermediatesubmission.presentation.ui.fragment.story
 
 import android.os.Bundle
 import android.transition.TransitionInflater
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.widget.ViewPager2
 import com.example.intermediatesubmission.databinding.FragmentStoryViewPagerBinding
 import com.example.intermediatesubmission.presentation.ui.adapters.story.StoryViewPagerAdapter
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class StoryViewPagerFragment : BaseStoryFragment() {
@@ -25,11 +28,11 @@ class StoryViewPagerFragment : BaseStoryFragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val enterAnimation = TransitionInflater.from(requireContext()).inflateTransition(
-            android.R.transition.slide_right
+            android.R.transition.explode
         )
 
         sharedElementEnterTransition = enterAnimation
-        sharedElementReturnTransition = null
+        sharedElementReturnTransition = enterAnimation
     }
 
     override fun onCreateView(
@@ -45,8 +48,10 @@ class StoryViewPagerFragment : BaseStoryFragment() {
         postponeEnterTransition()
         setupViewPager()
 
-        viewModel.storiesDb.observe(viewLifecycleOwner) { stories ->
-            storyViewPagerAdapter.submitList(stories)
+        viewModel.stories.observe(viewLifecycleOwner) {
+            lifecycleScope.launch {
+                storyViewPagerAdapter.submitData(it)
+            }
             (view.parent as? ViewGroup)?.viewTreeObserver?.addOnPreDrawListener {
                 startPostponedEnterTransition()
                 true
@@ -63,6 +68,13 @@ class StoryViewPagerFragment : BaseStoryFragment() {
     private fun setupViewPager() {
         storyViewPagerAdapter = StoryViewPagerAdapter()
         binding.viewPager.adapter = storyViewPagerAdapter
+        binding.viewPager.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
+            override fun onPageSelected(position: Int) {
+                super.onPageSelected(position)
+                viewModel.savePage(position)
+                Log.i("viewPager", "current position: $position")
+            }
+        })
     }
 
     private fun ViewPager2.reduceViewPagerSensitivity(n: Int) {

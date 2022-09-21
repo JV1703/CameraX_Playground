@@ -5,10 +5,10 @@ import android.util.Log
 import android.view.*
 import androidx.core.view.MenuHost
 import androidx.core.view.MenuProvider
+import androidx.core.view.doOnPreDraw
 import androidx.core.view.isVisible
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
-import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import androidx.paging.LoadState
 import com.example.intermediatesubmission.R
@@ -18,7 +18,6 @@ import com.example.intermediatesubmission.databinding.FragmentStoryListBinding
 import com.example.intermediatesubmission.presentation.ui.adapters.story.StoryLoadStateAdapter
 import com.example.intermediatesubmission.presentation.ui.adapters.story.StoryPagingAdapter
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
@@ -29,57 +28,6 @@ class StoryListFragment : BaseStoryFragment() {
 
     private lateinit var menuHost: MenuHost
     private lateinit var storyListAdapter: StoryPagingAdapter
-
-    private var refresh: Boolean = true
-
-    override fun onResume() {
-        Log.i("StoryListFragment", "onResume")
-        Log.i("StoryListFragment", "refresh - onResume: $refresh")
-//        storyListAdapter.refresh()
-        refreshData()
-        super.onResume()
-    }
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        Log.i("StoryListFragment", "onCreate")
-        super.onCreate(savedInstanceState)
-    }
-
-    override fun onViewStateRestored(savedInstanceState: Bundle?) {
-        Log.i("StoryListFragment", "onViewStateRestored")
-        refresh = false
-        Log.i("StoryListFragment", "refresh - onViewStateRestored: $refresh")
-        super.onViewStateRestored(savedInstanceState)
-    }
-
-    override fun onStart() {
-        Log.i("StoryListFragment", "onStart")
-        super.onStart()
-    }
-
-    override fun onPause() {
-        Log.i("StoryListFragment", "onPause")
-        super.onPause()
-    }
-
-    override fun onStop() {
-        Log.i("StoryListFragment", "onStop")
-        super.onStop()
-    }
-
-    override fun onDestroyView() {
-        Log.i("StoryListFragment", "onDestroyView")
-//        refresh = true
-//        Log.i("StoryListFragment", "refresh - onDestroyView: $refresh")
-        super.onDestroyView()
-    }
-
-    override fun onSaveInstanceState(outState: Bundle) {
-        Log.i("StoryListFragment", "onSaveInstance")
-        refresh = true
-        Log.i("StoryListFragment", "refresh - onSaveInstance: $refresh")
-        super.onSaveInstanceState(outState)
-    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
@@ -92,20 +40,21 @@ class StoryListFragment : BaseStoryFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         Log.i("StoryListFragment", "onViewCreated")
+        postponeEnterTransition()
         setupMenu()
         setupAdapter()
 
-        Log.i(
-            "storyListFragment",
-            "lifecycle: ${lifecycle.currentState.isAtLeast(Lifecycle.State.RESUMED)}"
-        )
-
-        viewLifecycleOwner.lifecycleScope.launch {
-            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                viewModel.stories.collectLatest { pagingData ->
-                    storyListAdapter.submitData(pagingData)
-                }
+        viewModel.stories.observe(viewLifecycleOwner) { pagingData ->
+            lifecycleScope.launch {
+                storyListAdapter.submitData(pagingData)
             }
+            (view.parent as? ViewGroup)?.doOnPreDraw {
+                startPostponedEnterTransition()
+            }
+        }
+
+        viewModel.page.observe(viewLifecycleOwner) {
+            binding.storyRv.scrollToPosition(it)
         }
 
         viewLifecycleOwner.lifecycleScope.launch {
@@ -115,11 +64,11 @@ class StoryListFragment : BaseStoryFragment() {
                     if (hasInternetConnection(requireContext())) {
                         storyListAdapter.refresh()
                         binding.storyRv.scrollToPosition(0)
-                        binding.refresh.isRefreshing = false
                     } else {
-                        binding.refresh.isRefreshing = false
                         makeToast(getString(R.string.fail_refresh))
                     }
+
+                    binding.refresh.isRefreshing = loadState.source.refresh is LoadState.Loading
                 }
 
                 val isListEmpty =
@@ -152,13 +101,6 @@ class StoryListFragment : BaseStoryFragment() {
         Log.i("StoryListFragment", "onDestroy")
         _binding = null
         super.onDestroy()
-    }
-
-    private fun refreshData() {
-        if (refresh) {
-            storyListAdapter.refresh()
-            refresh = true
-        }
     }
 
     private fun setupAdapter() {
