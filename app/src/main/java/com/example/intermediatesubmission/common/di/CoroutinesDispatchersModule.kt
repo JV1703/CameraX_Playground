@@ -1,5 +1,6 @@
-package com.example.movies.common.di
+package com.example.intermediatesubmission.common.di
 
+import com.example.movies.common.di.CoroutinesQualifiers
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

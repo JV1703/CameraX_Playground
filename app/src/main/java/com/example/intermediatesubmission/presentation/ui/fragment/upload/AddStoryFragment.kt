@@ -159,15 +159,14 @@ class AddStoryFragment : BaseUploadFragment() {
 
     private fun isLoading(isLoading: Boolean) {
 
-        binding.buttonAdd.isEnabled = !isLoading
-        binding.cameraBtn.isEnabled = !isLoading
-        binding.galleryBtn.isEnabled = !isLoading
-        binding.previewImageView.isEnabled = !isLoading
-        if (isLoading) {
-            binding.progressInd.visibility = View.VISIBLE
-        } else {
-            binding.progressInd.visibility = View.GONE
+        binding.apply {
+            buttonAdd.isEnabled = !isLoading
+            cameraBtn.isEnabled = !isLoading
+            galleryBtn.isEnabled = !isLoading
+            previewImageView.isEnabled = !isLoading
+            progressInd.visibility = if (isLoading) View.VISIBLE else View.GONE
         }
+
     }
 
     private fun uploadFile(file: File, text: String) {

@@ -74,12 +74,13 @@ class StoryListFragment : BaseStoryFragment() {
                 val isListEmpty =
                     loadState.refresh is LoadState.NotLoading && storyListAdapter.itemCount == 0
 
-                binding.errorMsg.isVisible = isListEmpty
-                binding.errorMsg.text = getString(R.string.no_result)
-                binding.storyRv.isVisible = !isListEmpty
-
-                binding.progressInd.isVisible = loadState.source.refresh is LoadState.Loading
-                binding.retryButton.isVisible = loadState.source.refresh is LoadState.Error
+                with(binding){
+                    errorMsg.isVisible = isListEmpty
+                    errorMsg.text = getString(R.string.no_result)
+                    storyRv.isVisible = !isListEmpty
+                    progressInd.isVisible = loadState.source.refresh is LoadState.Loading
+                    retryButton.isVisible = loadState.source.refresh is LoadState.Error
+                }
 
                 val errorState = loadState.source.append as? LoadState.Error
                     ?: loadState.source.prepend as? LoadState.Error
